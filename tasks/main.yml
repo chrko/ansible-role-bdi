@@ -73,3 +73,4 @@
     bdi__{{ bdi__name }}__install_path_base={{ bdi__install_path_base }}
     bdi__{{ bdi__name }}__install_path_dir={{ bdi__install_path_dir }}
     bdi__{{ bdi__name }}__install_path={{ bdi__install_path }}
+    bdi__{{ bdi__name }}__updated={{ version_cat.stdout | version_compare(bdi__version, "<") | bool }}
