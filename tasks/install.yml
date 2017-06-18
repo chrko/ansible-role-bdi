@@ -1,0 +1,64 @@
+---
+- name: Create temporary download directory
+  tempfile:
+    state: directory
+  register: temp_install_dir
+
+- name: Download {{ bdi__name }} archive
+  get_url:
+    url: '{{ bdi__download_link }}'
+    dest: '{{ temp_install_dir.path }}/archive.tar.gz'
+    checksum: '{{ bdi__archive_checksum }}'
+    tmp_dest: '{{ temp_install_dir.path }}'
+
+- name: Extract {{ bdi__name }} archive
+  unarchive:
+    src: '{{ temp_install_dir.path }}/archive.tar.gz'
+    dest: '{{ temp_install_dir.path }}/'
+    remote_src: yes
+    list_files: yes
+  register: archive_files
+
+- name: Move old files of {{ bdi__name }} to backup folder
+  command: 'mv {{ bdi__install_path }} {{ bdi__install_path_backup }}'
+  when: 'old_version != "0.0.0"'
+
+- name: Move {{ bdi__name }} files to install path
+  shell: "mv '{{ temp_install_dir.path }}/{{ bdi__archive_path }}' '{{ temp_install_dir.path }}/{{ bdi__install_path_dir }}' && \
+    mv -t '{{ bdi__install_path_base }}' '{{ temp_install_dir.path }}/{{ bdi__install_path_dir }}'"
+  when: 'bdi__archive_path|d() | length > 0'
+
+- when: 'not (bdi__archive_path|d() | length > 0)'
+  block:
+    - name: create install path
+      file:
+        state: directory
+        path: '{{ bdi__install_path }}'
+        owner: root
+        group: root
+
+    - name: move executables to install path
+      shell: "mv -t {{ bdi__install_path }} {{ temp_install_dir.path }}/{{ item }}"
+      with_items: '{{ bdi__executables }}'
+
+- name: Update owner & groups of installed files
+  file:
+    path: '{{ bdi__install_path }}'
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+
+- name: Create version file for {{ bdi__name }}
+  lineinfile:
+    path: '{{ bdi__version_file }}'
+    line: '{{ bdi__version }}'
+    regexp: '{{ old_version }}'
+    create: yes
+    owner: root
+    group: root
+
+- name: Remove temporary directory
+  file:
+    state: absent
+    path: '{{ temp_install_dir.path }}'
