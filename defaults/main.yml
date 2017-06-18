@@ -1,0 +1,15 @@
+---
+
+# bdi__name: 'prometheus'
+# bdi__version: ''
+# bdi__download_link: ''
+# bdi__archive_checksum: ''
+# bdi__archive_path: ''
+# bdi__executables: []
+
+bdi__version_file: '{{ bdi__install_path }}.version'
+bdi__install_path_base: '/opt'
+bdi__install_path_dir: '{{ bdi__name }}'
+bdi__install_path: '{{ bdi__install_path_base }}/{{ bdi__install_path_dir }}'
+bdi__install_path_backup: '{{ bdi__install_path }}-{{ old_version }}'
+bdi__link_path: '/usr/local/bin'
