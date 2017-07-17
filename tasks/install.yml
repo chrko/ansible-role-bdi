@@ -10,6 +10,13 @@
     dest: '{{ temp_install_dir.path }}/archive.tar.gz'
     checksum: '{{ bdi__archive_checksum }}'
     tmp_dest: '{{ temp_install_dir.path }}'
+  when: bdi__download_link|d('')|length > 0
+
+- name: Copy local archive
+  copy:
+    src: '{{ bdi__archive_path }}'
+    dest: '{{ temp_install_dir.path }}/archive.tar.gz'
+  when: bdi__download_link|d('')|length == 0
 
 - name: Extract {{ bdi__name }} archive
   unarchive:
