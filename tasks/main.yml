@@ -17,6 +17,7 @@
     src: '{{ bdi__install_path }}/{{ item }}'
     path: '{{ bdi__link_path }}/{{ item }}'
   with_items: '{{ bdi__executables }}'
+  when: 'bdi__executables|d([])|length > 0'
 
 - name: export variables
   set_fact: >
