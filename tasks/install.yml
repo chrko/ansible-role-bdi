@@ -14,7 +14,7 @@
 
 - name: Copy local archive
   copy:
-    src: '{{ bdi__archive_path }}'
+    src: '{{ bdi__archive_local }}'
     dest: '{{ temp_install_dir.path }}/archive.tar.gz'
   when: bdi__download_link|d('')|length == 0
 
