@@ -6,17 +6,17 @@
 
 - name: Download {{ bdi__name }} archive
   get_url:
-    url: '{{ bdi__download_link }}'
+    url: '{{ bdi__archive_source.download_url }}'
     dest: '{{ temp_install_dir.path }}/archive.tar.gz'
     checksum: '{{ bdi__archive_checksum }}'
     tmp_dest: '{{ temp_install_dir.path }}'
-  when: bdi__download_link|d('')|length > 0
+  when: bdi__archive_source.download_url is defined
 
 - name: Copy local archive
   copy:
-    src: '{{ bdi__archive_local }}'
+    src: '{{ bdi__archive_source.local_path }}'
     dest: '{{ temp_install_dir.path }}/archive.tar.gz'
-  when: bdi__download_link|d('')|length == 0
+  when: not bdi__archive_source.download_url is defined
 
 - name: Extract {{ bdi__name }} archive
   unarchive:

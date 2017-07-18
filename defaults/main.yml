@@ -2,8 +2,9 @@
 
 # bdi__name: 'prometheus'
 # bdi__version: ''
-# bdi__download_link: ''
-# or bdi__archive_local: ''
+# bdi__archive_source:
+#   download_url: ''
+#   locale_path: ''
 # bdi__archive_checksum: ''
 # bdi__archive_path: ''
 # bdi__executables: []
